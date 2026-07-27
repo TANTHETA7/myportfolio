@@ -165,7 +165,7 @@ export const resumeData: ResumeData = {
     frameworks: ["PyTorch", "TensorFlow", "CNN", "LSTM", "Llama2", "Generative AI (LLMs)", "MERN Stack", "Flask"],
     tools: ["Git", "GitHub", "Jupyter Notebook", "VS Code", "Android Studio", "Power BI", "n8n", "Ollama"],
     databases: ["MySQL", "MongoDB"],
-    hardware: ["Arduino IDE", "EEG/ECG Signal Processing", "Embedded ML"],
+    hardware: ["Arduino IDE", "Raspberry Pi", "Jetson Nano", "ESP32", "EEG/ECG Signal Processing", "Embedded ML"],
     concepts: [
       "PyTorch", "Pandas", "Scikit-Learn", "EEG/ECG Signal Processing", "Embedded ML",
       "Active Listening", "Empathy", "Verbal/Non-Verbal Communication", "Group Discussion",

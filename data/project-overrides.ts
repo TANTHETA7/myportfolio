@@ -63,17 +63,7 @@ export const projectOverrides: ProjectOverride[] = [
   // Test/scratch repos — hidden so they don't show up as project cards.
   { repoName: "exp5", hidden: true },
   { repoName: "experiment5", hidden: true },
-
-  {
-    repoName: "myportfolio",
-    title: "Myportfolio",
-    tagline: "This site — an AI/embedded-systems portfolio built with Next.js",
-    category: "web",
-    featured: true,
-    coverImage: "/images/projects/myportfolio-cover.jpg",
-    description:
-      "The portfolio you're looking at right now — a Next.js site with live GitHub/LeetCode sync, a Resend-backed contact form, and a fully custom design system.",
-  },
+  { repoName: "myportfolio", hidden: true },
 
   // ─── Template: copy-paste this to add a new override ──────
   // {

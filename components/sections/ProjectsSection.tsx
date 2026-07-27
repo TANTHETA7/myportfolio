@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Github, ArrowRight, RefreshCw } from "lucide-react";
 import { GlassCard } from "@/components/common/GlassCard";
-import { GlassImage } from "@/components/common/GlassImage";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { projectCategories, projects as staticProjects } from "@/data/projects";
 import { siteConfig } from "@/config/site";
@@ -68,14 +67,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               backgroundSize: "24px 24px",
             }}
           />
-
-          {project.coverImage && (
-            <GlassImage
-              src={project.coverImage}
-              alt={project.title}
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          )}
 
           {/* Category badge */}
           <div className="absolute top-3 left-3 flex items-center gap-1.5">

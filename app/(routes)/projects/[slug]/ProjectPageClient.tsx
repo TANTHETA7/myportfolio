@@ -14,7 +14,6 @@ import {
 import { FloatingNav } from "@/components/layout/FloatingNav";
 import { Footer } from "@/components/layout/Footer";
 import { GlassCard } from "@/components/common/GlassCard";
-import { GlassImage } from "@/components/common/GlassImage";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { CustomCursor } from "@/components/common/CustomCursor";
 import { formatDateRange } from "@/lib/utils";
@@ -53,9 +52,6 @@ export function ProjectPageClient({ project }: ProjectPageClientProps) {
             backgroundSize: "32px 32px",
           }}
         />
-        {project.coverImage && (
-          <GlassImage src={project.coverImage} alt={project.title} className="opacity-60" priority />
-        )}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
         <div className="container-wide relative z-10 pb-12">
