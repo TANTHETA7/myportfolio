@@ -3,6 +3,7 @@ import { inter, geistMono, clashDisplay } from "@/lib/fonts";
 import { siteConfig } from "@/config/site";
 import { LenisProvider } from "@/providers/LenisProvider";
 import { CustomCursor } from "@/components/common/CustomCursor";
+import { CursorStarfield } from "@/components/common/CursorStarfield";
 import { LoadingScreen } from "@/components/common/LoadingScreen";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LenisProvider>
           <LoadingScreen />
           <CustomCursor />
+          <CursorStarfield />
           <div className="noise-overlay" aria-hidden="true" />
           <main id="main-content">{children}</main>
           <Toaster
