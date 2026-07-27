@@ -1,3 +1,17 @@
+// Opens Gmail's web compose UI addressed to the site owner — works from any
+// browser regardless of whether the visitor has a local mail client/protocol
+// handler configured (unlike a bare `mailto:` link, which silently does
+// nothing if no handler is registered).
+export function gmailComposeUrl(subject?: string): string {
+  const params = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: siteConfig.email,
+  });
+  if (subject) params.set("su", subject);
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
 export const siteConfig = {
   name: "Tanmay",
   fullName: "Tanmay Singh",

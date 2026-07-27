@@ -5,23 +5,17 @@ import { motion } from "framer-motion";
 import { ArrowRight, Download, Mail } from "lucide-react";
 import { FiGithub, FiLinkedin } from "react-icons/fi";
 import { SiLeetcode } from "react-icons/si";
-import { toast } from "sonner";
-import { siteConfig } from "@/config/site";
+import { siteConfig, gmailComposeUrl } from "@/config/site";
 import { scrollToSection } from "@/hooks/useLenis";
 import { staggerContainer, fadeInUp, fadeInRight } from "@/utils/animations";
 import { cn } from "@/lib/utils";
 
 const socialLinks = [
-  { Icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email", isEmail: true },
+  { Icon: Mail, href: gmailComposeUrl(), label: "Email" },
   { Icon: FiGithub, href: siteConfig.github.url, label: "GitHub" },
   { Icon: FiLinkedin, href: siteConfig.linkedin.url, label: "LinkedIn" },
   { Icon: SiLeetcode, href: siteConfig.leetcode.url, label: "LeetCode" },
 ];
-
-function copyEmail() {
-  navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
-  toast.success("Email copied to clipboard", { description: siteConfig.email });
-}
 
 export function HeroSection() {
   return (
@@ -121,15 +115,14 @@ export function HeroSection() {
             </motion.div>
 
             <motion.div variants={fadeInUp} className="flex items-center gap-3">
-              {socialLinks.map(({ Icon, href, label, isEmail }) => (
+              {socialLinks.map(({ Icon, href, label }) => (
                 <a
                   key={label}
                   href={href}
-                  target={isEmail ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
                   data-cursor="pointer"
-                  onClick={isEmail ? () => copyEmail() : undefined}
                   className={cn(
                     "w-9 h-9 rounded-xl flex items-center justify-center",
                     "bg-white/[0.04] border border-white/[0.07] text-white/40",

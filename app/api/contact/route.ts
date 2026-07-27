@@ -1,21 +1,20 @@
 /**
  * Contact Form API
  *
- * Sends incoming contact-form messages straight to the site owner's Gmail
- * via Gmail's SMTP relay (Nodemailer). Requires two env vars:
+ * Sends incoming contact-form messages to the site owner's inbox via
+ * Web3Forms (https://web3forms.com) — a free service that emails form
+ * submissions straight to whatever address the access key was created for.
+ * No SMTP credentials, no 2FA setup.
  *
- *   GMAIL_USER          — the sending Gmail address (e.g. tanmaynew25@gmail.com)
- *   GMAIL_APP_PASSWORD  — a 16-character Google "App Password" (NOT the normal
- *                          account password). Generate one at:
- *                          Google Account → Security → 2-Step Verification
- *                          (must be enabled) → App Passwords → "Mail"
+ * Requires one env var:
+ *   WEB3FORMS_ACCESS_KEY — get one instantly at https://web3forms.com
+ *   (enter your email, they send you a free access key, no signup/2FA)
  *
- * Without these set, the route returns 503 so the frontend can fall back
+ * Without it set, the route returns 503 so the frontend can fall back
  * to a "email service not configured" message instead of silently failing.
  */
 
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { z } from "zod";
 import { siteConfig } from "@/config/site";
 
@@ -26,11 +25,12 @@ const contactSchema = z.object({
   message: z.string().min(20).max(5000),
 });
 
-export async function POST(request: Request) {
-  const gmailUser = process.env.GMAIL_USER;
-  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
-  if (!gmailUser || !gmailAppPassword) {
+export async function POST(request: Request) {
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
+
+  if (!accessKey) {
     return NextResponse.json(
       { error: "Email service not configured" },
       { status: 503 }
@@ -55,36 +55,30 @@ export async function POST(request: Request) {
   const { name, email, subject, message } = parsed.data;
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: gmailUser, pass: gmailAppPassword },
+    const res = await fetch(WEB3FORMS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: accessKey,
+        subject: `[Portfolio Contact] ${subject}`,
+        from_name: name,
+        email,
+        replyto: email,
+        to: siteConfig.email,
+        message: `From: ${name} <${email}>\nSubject: ${subject}\n\n${message}`,
+      }),
     });
 
-    await transporter.sendMail({
-      from: `"${siteConfig.fullName} — Portfolio" <${gmailUser}>`,
-      to: siteConfig.email,
-      replyTo: email,
-      subject: `[Portfolio Contact] ${subject}`,
-      text: `From: ${name} <${email}>\n\n${message}`,
-      html: `
-        <p><strong>From:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p>
-        <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
-        <p>${escapeHtml(message).replace(/\n/g, "<br/>")}</p>
-      `,
-    });
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok || !data?.success) {
+      console.error("[/api/contact] Web3Forms rejected submission:", data);
+      return NextResponse.json({ error: "Failed to send message" }, { status: 502 });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[/api/contact]", err);
     return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }
-}
-
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }

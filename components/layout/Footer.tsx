@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
 import { SiLeetcode } from "react-icons/si";
-import { toast } from "sonner";
-import { siteConfig } from "@/config/site";
+import { siteConfig, gmailComposeUrl } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/hooks/useLenis";
 import { staggerContainer, fadeInUp } from "@/utils/animations";
@@ -20,7 +19,7 @@ const socialIcons = [
   { Icon: FiGithub, href: siteConfig.github.url, label: "GitHub" },
   { Icon: FiLinkedin, href: siteConfig.linkedin.url, label: "LinkedIn" },
   { Icon: SiLeetcode, href: siteConfig.leetcode.url, label: "LeetCode" },
-  { Icon: FiMail, href: `mailto:${siteConfig.email}`, label: "Email" },
+  { Icon: FiMail, href: gmailComposeUrl(), label: "Email" },
 ];
 
 export function Footer() {
@@ -95,17 +94,9 @@ export function Footer() {
                 <a
                   key={label}
                   href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  onClick={
-                    href.startsWith("mailto")
-                      ? () => {
-                          navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
-                          toast.success("Email copied to clipboard", { description: siteConfig.email });
-                        }
-                      : undefined
-                  }
                   className={cn(
                     "w-9 h-9 rounded-xl flex items-center justify-center",
                     "bg-white/[0.05] border border-white/[0.07]",

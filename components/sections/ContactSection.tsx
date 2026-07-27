@@ -9,7 +9,7 @@ import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { IndiaLocationMap } from "@/components/common/IndiaLocationMap";
-import { siteConfig } from "@/config/site";
+import { siteConfig, gmailComposeUrl } from "@/config/site";
 import { staggerContainer, fadeInLeft, fadeInRight } from "@/utils/animations";
 import { cn } from "@/lib/utils";
 
@@ -29,7 +29,7 @@ const contactMethods = [
     icon: Mail,
     label: "Email",
     value: siteConfig.email,
-    href: `mailto:${siteConfig.email}`,
+    href: gmailComposeUrl(),
     color: "#8b5cf6",
   },
   {
@@ -201,17 +201,9 @@ export function ContactSection() {
               <motion.div key={label} variants={fadeInLeft}>
                 <a
                   href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
+                  target="_blank"
                   rel="noopener noreferrer"
                   data-cursor="pointer"
-                  onClick={
-                    href.startsWith("mailto")
-                      ? () => {
-                          navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
-                          toast.success("Email copied to clipboard", { description: siteConfig.email });
-                        }
-                      : undefined
-                  }
                 >
                   <GlassCard
                     hover
