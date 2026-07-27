@@ -16,6 +16,11 @@
  *   in Resend, set this to an address on that domain to send from it and
  *   to any recipient.
  *
+ *   RESEND_TO_EMAIL — where messages actually get delivered. Defaults to
+ *   siteConfig.email, but until a domain is verified, Resend's sandbox mode
+ *   only allows delivery to the email address your Resend account itself is
+ *   registered under — set this if that differs from siteConfig.email.
+ *
  * Without RESEND_API_KEY set, the route returns 503 so the frontend can
  * fall back to a "email service not configured" message instead of
  * silently failing.
@@ -61,6 +66,7 @@ export async function POST(request: Request) {
 
   const { name, email, subject, message } = parsed.data;
   const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
+  const toEmail = process.env.RESEND_TO_EMAIL || siteConfig.email;
 
   try {
     const res = await fetch(RESEND_ENDPOINT, {
@@ -71,7 +77,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         from: `${siteConfig.fullName} — Portfolio <${fromEmail}>`,
-        to: [siteConfig.email],
+        to: [toEmail],
         reply_to: email,
         subject: `[Portfolio Contact] ${subject}`,
         text: `From: ${name} <${email}>\n\n${message}`,
