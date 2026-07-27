@@ -36,7 +36,6 @@ interface DockItem {
 const dockItems: DockItem[] = [
   { id: "home", label: "Home", icon: "Home", href: "#" },
   { id: "projects", label: "Projects", icon: "FolderGit2", href: "#projects" },
-  { id: "activity", label: "Activity", icon: "Github", href: "#activity" },
   { id: "contact", label: "Contact", icon: "Mail", href: "#contact" },
 ];
 

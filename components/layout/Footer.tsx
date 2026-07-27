@@ -11,7 +11,6 @@ import { staggerContainer, fadeInUp } from "@/utils/animations";
 
 const footerLinks = [
   { label: "Projects", href: "#projects" },
-  { label: "Activity", href: "#activity" },
   { label: "Contact", href: "#contact" },
 ];
 

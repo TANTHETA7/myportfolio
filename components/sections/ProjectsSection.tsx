@@ -54,9 +54,9 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             : undefined
         }
       >
-        {/* Cover */}
+        {/* Cover — grows taller on hover to reveal more of the image */}
         <div
-          className="relative h-44 overflow-hidden"
+          className="relative h-32 group-hover:h-56 transition-[height] duration-500 ease-out overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${catColor}18 0%, rgba(3,3,5,0.8) 100%)`,
           }}
@@ -121,103 +121,115 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         {/* Content */}
         <div className="p-5 flex flex-col flex-1">
+          {/* Always visible: name + a little info */}
           <h3 className="font-display font-semibold text-white/90 text-lg mb-1 leading-tight tracking-tight">
             {project.title}
           </h3>
-          <p className="text-xs text-white/35 font-medium mb-3">{project.tagline}</p>
-          <p className="text-sm text-white/40 leading-relaxed mb-4 flex-1 line-clamp-3">
-            {project.description}
-          </p>
+          <p className="text-xs text-white/35 font-medium">{project.tagline}</p>
 
-          {/* Metrics */}
-          {project.metrics && project.metrics.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
-              {project.metrics.slice(0, 2).map((metric) => (
-                <div
-                  key={metric.label}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06]"
-                >
-                  <span className="text-xs font-bold" style={{ color: catColor }}>
-                    {metric.value}
-                    {metric.unit && (
-                      <span className="text-[10px] font-normal">{metric.unit}</span>
-                    )}
-                  </span>
-                  <span className="text-[10px] text-white/30">{metric.label}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Tech stack */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            {project.techStack.slice(0, 4).map((tech) => (
-              <span
-                key={tech.name}
-                className="px-2 py-0.5 rounded-md text-[10px] font-mono text-white/40 bg-white/[0.04] border border-white/[0.05]"
-              >
-                {tech.name}
-              </span>
-            ))}
-            {project.techStack.length > 4 && (
-              <span className="px-2 py-0.5 rounded-md text-[10px] font-mono text-white/25">
-                +{project.techStack.length - 4}
-              </span>
+          {/* Revealed on hover/focus: slides up into view */}
+          <div
+            className={cn(
+              "max-h-0 opacity-0 -translate-y-1 mt-0",
+              "group-hover:max-h-[640px] group-hover:opacity-100 group-hover:translate-y-0 group-hover:mt-4",
+              "group-focus-within:max-h-[640px] group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:mt-4",
+              "overflow-hidden transition-all duration-500 ease-out flex flex-col flex-1"
             )}
-          </div>
+          >
+            <p className="text-sm text-white/40 leading-relaxed mb-4 flex-1 line-clamp-3">
+              {project.description}
+            </p>
 
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-3 border-t border-white/[0.05]">
-            <div className="flex items-center gap-3">
-              {project.githubUrl && (
+            {/* Metrics */}
+            {project.metrics && project.metrics.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.metrics.slice(0, 2).map((metric) => (
+                  <div
+                    key={metric.label}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.06]"
+                  >
+                    <span className="text-xs font-bold" style={{ color: catColor }}>
+                      {metric.value}
+                      {metric.unit && (
+                        <span className="text-[10px] font-normal">{metric.unit}</span>
+                      )}
+                    </span>
+                    <span className="text-[10px] text-white/30">{metric.label}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Tech stack */}
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {project.techStack.slice(0, 4).map((tech) => (
+                <span
+                  key={tech.name}
+                  className="px-2 py-0.5 rounded-md text-[10px] font-mono text-white/40 bg-white/[0.04] border border-white/[0.05]"
+                >
+                  {tech.name}
+                </span>
+              ))}
+              {project.techStack.length > 4 && (
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-mono text-white/25">
+                  +{project.techStack.length - 4}
+                </span>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-3 border-t border-white/[0.05]">
+              <div className="flex items-center gap-3">
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub repository"
+                    className="text-white/25 hover:text-white/60 transition-colors duration-200"
+                    data-cursor="pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Github className="w-4 h-4" />
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Live demo"
+                    className="text-white/25 hover:text-white/60 transition-colors duration-200"
+                    data-cursor="pointer"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+
+              {hasCaseStudy ? (
+                <Link
+                  href={`/projects/${project.slug}`}
+                  className="flex items-center gap-1.5 text-xs font-medium text-white/40 hover:text-white/80 transition-colors duration-200 group/link"
+                  data-cursor="pointer"
+                >
+                  Case Study
+                  <ArrowRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform duration-200" />
+                </Link>
+              ) : project.githubUrl ? (
                 <a
                   href={project.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="GitHub repository"
-                  className="text-white/25 hover:text-white/60 transition-colors duration-200"
+                  className="flex items-center gap-1.5 text-xs font-medium text-white/30 hover:text-white/60 transition-colors duration-200"
                   data-cursor="pointer"
-                  onClick={(e) => e.stopPropagation()}
                 >
-                  <Github className="w-4 h-4" />
+                  View Repo
+                  <ArrowRight className="w-3 h-3" />
                 </a>
-              )}
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Live demo"
-                  className="text-white/25 hover:text-white/60 transition-colors duration-200"
-                  data-cursor="pointer"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              )}
+              ) : null}
             </div>
-
-            {hasCaseStudy ? (
-              <Link
-                href={`/projects/${project.slug}`}
-                className="flex items-center gap-1.5 text-xs font-medium text-white/40 hover:text-white/80 transition-colors duration-200 group/link"
-                data-cursor="pointer"
-              >
-                Case Study
-                <ArrowRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform duration-200" />
-              </Link>
-            ) : project.githubUrl ? (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-xs font-medium text-white/30 hover:text-white/60 transition-colors duration-200"
-                data-cursor="pointer"
-              >
-                View Repo
-                <ArrowRight className="w-3 h-3" />
-              </a>
-            ) : null}
           </div>
         </div>
       </GlassCard>
