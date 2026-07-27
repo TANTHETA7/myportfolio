@@ -2,14 +2,12 @@
 
 import { motion } from "framer-motion";
 import {
-  Download,
   ExternalLink,
   GraduationCap,
   Briefcase,
   Code2,
   Award,
   BookOpen,
-  FileText,
 } from "lucide-react";
 import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
@@ -43,8 +41,6 @@ function Tag({ text, color }: { text: string; color?: string }) {
 }
 
 export function ResumeSection() {
-  const hasResumePdf = true; // set false if /public/resume.pdf not yet uploaded
-
   return (
     <section id="resume" className="section-padding relative" aria-label="Resume">
       <div
@@ -71,42 +67,6 @@ export function ResumeSection() {
           viewport={{ once: true, amount: 0.05 }}
           className="space-y-6"
         >
-          {/* Download / view buttons */}
-          <motion.div variants={staggerItem} className="flex flex-wrap gap-3 justify-center">
-            {hasResumePdf && (
-              <a
-                href="/resume.pdf"
-                download
-                data-cursor="pointer"
-                className={cn(
-                  "inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium",
-                  "bg-violet-500/15 border border-violet-500/25 text-violet-300/80",
-                  "hover:bg-violet-500/25 hover:border-violet-500/40 hover:text-violet-300",
-                  "transition-all duration-200"
-                )}
-              >
-                <Download className="w-4 h-4" />
-                Download Resume
-              </a>
-            )}
-            <a
-              href={resumeData.contact.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-cursor="pointer"
-              className={cn(
-                "inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm",
-                "text-white/40 bg-white/[0.04] border border-white/[0.07]",
-                "hover:bg-white/[0.07] hover:text-white/70 hover:border-white/[0.12]",
-                "transition-all duration-200"
-              )}
-            >
-              <FileText className="w-4 h-4" />
-              LinkedIn Profile
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </motion.div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left column: Education + Skills */}
             <div className="space-y-4">
@@ -178,36 +138,9 @@ export function ResumeSection() {
                   </div>
                 </GlassCard>
               </motion.div>
-
-              {/* Awards */}
-              {resumeData.awards.length > 0 && (
-                <motion.div variants={staggerItem}>
-                  <GlassCard className="p-5">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Award className="w-3.5 h-3.5 text-amber-400/60" />
-                      <p className="text-xs font-mono tracking-widest uppercase text-white/25">
-                        Awards
-                      </p>
-                    </div>
-                    <div className="space-y-3">
-                      {resumeData.awards.map((award, i) => (
-                        <div key={i}>
-                          <p className="text-sm font-medium text-white/70">{award.title}</p>
-                          <p className="text-[11px] text-white/35 mt-0.5">
-                            {award.organization} · {award.date}
-                          </p>
-                          {award.description && (
-                            <p className="text-[11px] text-white/25 mt-1">{award.description}</p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              )}
             </div>
 
-            {/* Right column (2-col span): Experience + Publications */}
+            {/* Right column (2-col span): Experience + Awards + Publications */}
             <div className="lg:col-span-2 space-y-4">
               {/* Experience */}
               <motion.div variants={staggerItem}>
@@ -279,6 +212,33 @@ export function ResumeSection() {
                   </div>
                 </GlassCard>
               </motion.div>
+
+              {/* Awards */}
+              {resumeData.awards.length > 0 && (
+                <motion.div variants={staggerItem}>
+                  <GlassCard className="p-5">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Award className="w-3.5 h-3.5 text-amber-400/60" />
+                      <p className="text-xs font-mono tracking-widest uppercase text-white/25">
+                        Awards
+                      </p>
+                    </div>
+                    <div className="space-y-3">
+                      {resumeData.awards.map((award, i) => (
+                        <div key={i}>
+                          <p className="text-sm font-medium text-white/70">{award.title}</p>
+                          <p className="text-[11px] text-white/35 mt-0.5">
+                            {award.organization} · {award.date}
+                          </p>
+                          {award.description && (
+                            <p className="text-[11px] text-white/25 mt-1">{award.description}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
 
               {/* Publications */}
               {resumeData.publications.length > 0 && (

@@ -204,6 +204,14 @@ export function ContactSection() {
                   target={href.startsWith("mailto") ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   data-cursor="pointer"
+                  onClick={
+                    href.startsWith("mailto")
+                      ? () => {
+                          navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
+                          toast.success("Email copied to clipboard", { description: siteConfig.email });
+                        }
+                      : undefined
+                  }
                 >
                   <GlassCard
                     hover

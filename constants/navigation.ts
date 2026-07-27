@@ -9,13 +9,6 @@ export const navItems: NavItem[] = [
     tooltip: "Back to top",
   },
   {
-    id: "about",
-    label: "About",
-    href: "/#about",
-    icon: "User",
-    tooltip: "About me",
-  },
-  {
     id: "projects",
     label: "Projects",
     href: "/#projects",

@@ -4,13 +4,13 @@ import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { FiGithub, FiLinkedin, FiMail } from "react-icons/fi";
 import { SiLeetcode } from "react-icons/si";
+import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { scrollToSection } from "@/hooks/useLenis";
 import { staggerContainer, fadeInUp } from "@/utils/animations";
 
 const footerLinks = [
-  { label: "About", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Activity", href: "#activity" },
   { label: "Contact", href: "#contact" },
@@ -98,6 +98,14 @@ export function Footer() {
                   target={href.startsWith("mailto") ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={label}
+                  onClick={
+                    href.startsWith("mailto")
+                      ? () => {
+                          navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
+                          toast.success("Email copied to clipboard", { description: siteConfig.email });
+                        }
+                      : undefined
+                  }
                   className={cn(
                     "w-9 h-9 rounded-xl flex items-center justify-center",
                     "bg-white/[0.05] border border-white/[0.07]",

@@ -2,18 +2,26 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Download, Mail, Code2 } from "lucide-react";
+import { ArrowRight, Download, Mail } from "lucide-react";
 import { FiGithub, FiLinkedin } from "react-icons/fi";
+import { SiLeetcode } from "react-icons/si";
+import { toast } from "sonner";
 import { siteConfig } from "@/config/site";
 import { scrollToSection } from "@/hooks/useLenis";
 import { staggerContainer, fadeInUp, fadeInRight } from "@/utils/animations";
 import { cn } from "@/lib/utils";
 
 const socialLinks = [
-  { Icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email" },
+  { Icon: Mail, href: `mailto:${siteConfig.email}`, label: "Email", isEmail: true },
   { Icon: FiGithub, href: siteConfig.github.url, label: "GitHub" },
   { Icon: FiLinkedin, href: siteConfig.linkedin.url, label: "LinkedIn" },
+  { Icon: SiLeetcode, href: siteConfig.leetcode.url, label: "LeetCode" },
 ];
+
+function copyEmail() {
+  navigator.clipboard?.writeText(siteConfig.email).catch(() => {});
+  toast.success("Email copied to clipboard", { description: siteConfig.email });
+}
 
 export function HeroSection() {
   return (
@@ -65,18 +73,20 @@ export function HeroSection() {
               variants={fadeInUp}
               className="text-base md:text-lg font-mono text-cyan-300/80 mb-6"
             >
-              AI Engineer &amp; CS Student{" "}
-              <span className="text-white/20">|</span> Embedded AI{" "}
-              <span className="text-white/20">·</span> EEG/ECG Signal Processing{" "}
-              <span className="text-white/20">·</span> Defence Tech
+              Problem Solver <span className="text-white/20">|</span> AI &amp; Embedded Systems{" "}
+              <span className="text-white/20">|</span> Building Intelligent Hardware
             </motion.p>
 
-            <motion.p
+            <motion.div
               variants={fadeInUp}
-              className="text-white/45 leading-relaxed text-[15px] md:text-base max-w-xl mb-8"
+              className="space-y-4 text-white/45 leading-relaxed text-[15px] md:text-base max-w-xl mb-8"
             >
-              I&apos;m an aspiring Computer Science &amp; Data Science student applying machine learning, intelligent systems, and embedded AI to real-world, hardware-backed challenges — from fighter-pilot HUDs to EEG-driven target lock-in. I care about the full stack: signal processing, model architecture, and the hardware it runs on.
-            </motion.p>
+              <p>I build intelligent systems that connect software with the real world.</p>
+              <p>
+                My interests span Artificial Intelligence, Embedded Systems, Computer Vision, and Full-Stack Development. I enjoy tackling complex engineering challenges, building hardware prototypes, and transforming ideas into reliable, real-world solutions.
+              </p>
+              <p>I don&apos;t just write code—I design systems, solve problems, and build technology that creates impact.</p>
+            </motion.div>
 
             <motion.div
               variants={fadeInUp}
@@ -111,14 +121,15 @@ export function HeroSection() {
             </motion.div>
 
             <motion.div variants={fadeInUp} className="flex items-center gap-3">
-              {socialLinks.map(({ Icon, href, label }) => (
+              {socialLinks.map(({ Icon, href, label, isEmail }) => (
                 <a
                   key={label}
                   href={href}
-                  target={href.startsWith("mailto") ? undefined : "_blank"}
+                  target={isEmail ? undefined : "_blank"}
                   rel="noopener noreferrer"
                   aria-label={label}
                   data-cursor="pointer"
+                  onClick={isEmail ? () => copyEmail() : undefined}
                   className={cn(
                     "w-9 h-9 rounded-xl flex items-center justify-center",
                     "bg-white/[0.04] border border-white/[0.07] text-white/40",
@@ -128,12 +139,6 @@ export function HeroSection() {
                   <Icon className="w-4 h-4" />
                 </a>
               ))}
-              <span
-                aria-hidden="true"
-                className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/[0.04] border border-white/[0.07] text-white/40"
-              >
-                <Code2 className="w-4 h-4" />
-              </span>
             </motion.div>
           </motion.div>
 

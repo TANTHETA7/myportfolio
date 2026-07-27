@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { FloatingNav } from "@/components/layout/FloatingNav";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { AboutSection } from "@/components/sections/AboutSection";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { CodeActivitySection } from "@/components/sections/CodeActivitySection";
 import { ResumeSection } from "@/components/sections/ResumeSection";
@@ -16,7 +15,6 @@ export default function HomePage() {
       <FloatingNav />
 
       <HeroSection />
-      <AboutSection />
       <ProjectsSection />
       <ResumeSection />
 

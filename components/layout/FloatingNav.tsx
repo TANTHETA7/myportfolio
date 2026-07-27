@@ -5,12 +5,10 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Link from "next/link";
 import {
   Home,
-  User,
   FolderGit2,
   Github,
   Mail,
   FileText,
-  BookOpen,
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,12 +19,9 @@ type IconComponent = React.ComponentType<{ className?: string; style?: React.CSS
 
 const iconMap: Record<string, IconComponent> = {
   Home,
-  User,
   FolderGit2,
   Github,
   Mail,
-  FileText,
-  BookOpen,
   ExternalLink,
 };
 
@@ -40,11 +35,8 @@ interface DockItem {
 
 const dockItems: DockItem[] = [
   { id: "home", label: "Home", icon: "Home", href: "#" },
-  { id: "about", label: "About", icon: "User", href: "#about" },
   { id: "projects", label: "Projects", icon: "FolderGit2", href: "#projects" },
-  { id: "resume", label: "Resume", icon: "FileText", href: "#resume" },
   { id: "activity", label: "Activity", icon: "Github", href: "#activity" },
-  { id: "blog", label: "Blog", icon: "BookOpen", href: "/blog", isExternal: false },
   { id: "contact", label: "Contact", icon: "Mail", href: "#contact" },
 ];
 

@@ -257,7 +257,6 @@ export const projectCategories = [
   { id: "all", label: "All Projects" },
   { id: "ai-ml", label: "AI / ML" },
   { id: "computer-vision", label: "Computer Vision" },
-  { id: "robotics", label: "Robotics" },
   { id: "iot", label: "IoT & Embedded" },
   { id: "embedded", label: "Embedded" },
   { id: "web", label: "Web" },

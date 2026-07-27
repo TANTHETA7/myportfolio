@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { FiGithub, FiStar, FiBook, FiGitCommit } from "react-icons/fi";
-import { SiLeetcode } from "react-icons/si";
-import { ExternalLink, Flame, Trophy, Target, Award } from "lucide-react";
+import { FiStar, FiBook, FiGitCommit } from "react-icons/fi";
+import { Flame, Trophy, Target, Award } from "lucide-react";
 import { GlassCard } from "@/components/common/GlassCard";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { ContributionGraph } from "@/components/common/ContributionGraph";
@@ -13,7 +12,7 @@ import { LeetCodeHeatmap } from "@/components/common/LeetCodeHeatmap";
 import { AnimatedCounter } from "@/components/common/AnimatedCounter";
 import { offlineLogContributions, totalOfflineContributions } from "@/data/offline-log";
 import { siteConfig } from "@/config/site";
-import { staggerContainer, staggerItem, fadeInUp } from "@/utils/animations";
+import { staggerContainer, staggerItem } from "@/utils/animations";
 import { cn } from "@/lib/utils";
 import type { GitHubData } from "@/types/github";
 import type { LeetCodeData } from "@/types/leetcode";
@@ -377,41 +376,6 @@ export function CodeActivitySection() {
               </motion.div>
             )}
 
-            {/* View profile links */}
-            <motion.div variants={fadeInUp} className="flex flex-wrap justify-center gap-3">
-              <a
-                href={siteConfig.github.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 px-6 py-3 rounded-xl",
-                  "text-sm text-white/40 bg-white/[0.04] border border-white/[0.07]",
-                  "hover:bg-white/[0.07] hover:text-white/70 hover:border-white/[0.12]",
-                  "transition-all duration-200"
-                )}
-                data-cursor="pointer"
-              >
-                <FiGithub className="w-4 h-4" />
-                View full GitHub profile
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href={siteConfig.leetcode.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "inline-flex items-center gap-2 px-6 py-3 rounded-xl",
-                  "text-sm text-white/40 bg-white/[0.04] border border-white/[0.07]",
-                  "hover:bg-white/[0.07] hover:text-white/70 hover:border-white/[0.12]",
-                  "transition-all duration-200"
-                )}
-                data-cursor="pointer"
-              >
-                <SiLeetcode className="w-4 h-4 text-amber-400" />
-                View LeetCode profile
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </motion.div>
           </motion.div>
         )}
       </div>
