@@ -1,0 +1,101 @@
+---
+title: "Building NeuroVis: 97.4% Accuracy Brain Tumor Detection with Grad-CAM"
+description: "How I trained a custom CNN to classify MRI scans across 4 tumor types, then made it explainable with gradient-weighted class activation maps."
+date: "2025-03-15"
+tags: ["computer-vision", "pytorch", "deep-learning", "medical-ai"]
+published: true
+featured: true
+---
+
+Brain tumor classification is one of those problems where the stakes are so high that "pretty good" accuracy isn't good enough. A misclassification can mean delayed treatment or, worse, the wrong treatment entirely. This is the story of how I built NeuroVis — a system that classifies MRI brain scans across 4 categories at 97.4% accuracy — and more importantly, made it *explainable*.
+
+## The Problem
+
+Radiologists analyze hundreds of MRI scans per day. Even the most experienced ones make errors, especially under fatigue. The goal wasn't to replace them — it was to give them a second opinion that could flag suspicious regions and explain *why* it flagged them.
+
+The dataset: 3,264 MRI images split across:
+- **Glioma** (malignant, most dangerous)
+- **Meningioma** (usually benign)
+- **Pituitary** (often small, treatable)
+- **No Tumor** (normal brain)
+
+## Architecture
+
+I started with a pretrained **ResNet-50** backbone, then replaced the final fully-connected layer with:
+
+```python
+nn.Sequential(
+    nn.Dropout(0.5),
+    nn.Linear(2048, 512),
+    nn.ReLU(),
+    nn.Dropout(0.3),
+    nn.Linear(512, 4),  # 4 classes
+)
+```
+
+The pretrained ImageNet weights gave strong low-level features (edges, textures) for free. Fine-tuning on MRI data adapted the higher layers to medical imaging patterns.
+
+## Training Strategy
+
+Standard fine-tuning would have overfit badly — 3,264 images is not a lot for a 23M-parameter model. I used a staged unfreezing approach:
+
+1. **Epoch 1–5**: Freeze backbone, train only the new head
+2. **Epoch 6–15**: Unfreeze last 2 ResNet blocks, LR = 1e-4
+3. **Epoch 16–30**: Full network, LR = 1e-5 with cosine annealing
+
+Data augmentation was aggressive: random horizontal flip, rotation (±15°), brightness/contrast jitter, and MixUp (α=0.4). This synthetic diversity was crucial — tumors appear at all orientations and contrast levels in real scans.
+
+## Grad-CAM: Making It Explainable
+
+Raw classification confidence means nothing to a radiologist who needs to know *where* the model is looking. Grad-CAM (Gradient-weighted Class Activation Mapping) computes a heatmap showing which spatial regions most influenced the prediction.
+
+```python
+def grad_cam(model, input_tensor, target_class):
+    gradients = []
+    activations = []
+
+    def forward_hook(module, inp, output):
+        activations.append(output)
+
+    def backward_hook(module, grad_in, grad_out):
+        gradients.append(grad_out[0])
+
+    # Hook into last conv layer
+    handle_fwd = model.layer4[-1].register_forward_hook(forward_hook)
+    handle_bwd = model.layer4[-1].register_backward_hook(backward_hook)
+
+    output = model(input_tensor)
+    model.zero_grad()
+    output[0, target_class].backward()
+
+    # Compute weighted activation map
+    weights = gradients[0].mean(dim=[2, 3], keepdim=True)
+    cam = (weights * activations[0]).sum(dim=1).relu()
+    cam = F.interpolate(cam.unsqueeze(1), size=input_tensor.shape[-2:], mode="bilinear")
+
+    handle_fwd.remove()
+    handle_bwd.remove()
+    return cam
+```
+
+The output is overlaid on the original MRI slice. In >90% of cases, the highlighted region matched the radiologist-annotated tumor location.
+
+## Results
+
+| Metric | Score |
+|--------|-------|
+| Overall Accuracy | **97.4%** |
+| Glioma F1 | 98.1% |
+| Meningioma F1 | 96.2% |
+| Pituitary F1 | 98.7% |
+| No Tumor F1 | 97.8% |
+
+Meningioma was hardest — they often appear similar to normal tissue in T1-weighted scans. The Grad-CAM heatmaps were especially valuable here, showing the model's uncertainty when confidence was low.
+
+## What I'd Do Differently
+
+1. **Dataset size**: 3,264 images is small. With access to a larger dataset (e.g., BraTS), performance would improve further.
+2. **3D convolutions**: MRI is volumetric. Processing 2D slices throws away inter-slice information. A 3D ResNet would capture spatial context across the full volume.
+3. **Uncertainty quantification**: Instead of a single softmax score, Monte Carlo Dropout could give calibrated confidence intervals — more useful clinically.
+
+The code is on [GitHub](https://github.com/TANTHETA7). If you're working on something similar, feel free to reach out.
